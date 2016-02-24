@@ -19,7 +19,22 @@ package textapi
 import (
 	"errors"
 	"net/url"
+	"strings"
+	"time"
 )
+
+// DateTime embeds time.Time and acts as an alias for custom unmarshalling.
+type DateTime struct {
+	time.Time
+}
+
+// Custom unmarshaller for time.Time which discards errors and will set the time to zero value
+// in case parsing failed. Using time.Time.IsZero() is advised.
+func (t *DateTime) UnmarshalJSON(buf []byte) error {
+	tt, _ := time.Parse(time.RFC3339, strings.Trim(string(buf), `"`))
+	t.Time = tt
+	return nil
+}
 
 // ExtractParams is the set of parameters that defines a web page whose data needs to be extracted.
 type ExtractParams struct {
@@ -33,12 +48,13 @@ type ExtractParams struct {
 
 // ExtractResponse is the JSON description of extract response.
 type ExtractResponse struct {
-	Title   string   `json:"title"`
-	Article string   `json:"article"`
-	Image   string   `json:"image"`
-	Author  string   `json:"author"`
-	Videos  []string `json:"videos"`
-	Feeds   []string `json:"feeds"`
+	Title       string   `json:"title"`
+	Article     string   `json:"article"`
+	Image       string   `json:"image"`
+	Author      string   `json:"author"`
+	PublishDate DateTime `json:"publishDate"`
+	Videos      []string `json:"videos"`
+	Feeds       []string `json:"feeds"`
 }
 
 // Extract extracts information from the web page defined by the given params information.
