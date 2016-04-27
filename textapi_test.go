@@ -86,6 +86,8 @@ func init() {
 				bytes, _ = json.Marshal(MicroformatsResponse{})
 			case "/image-tags":
 				bytes, _ = json.Marshal(ImageTagsResponse{})
+			case "/absa/cars":
+				bytes, _ = json.Marshal(AspectBasedSentimentResponse{})
 			}
 			fmt.Fprintln(w, string(bytes))
 		}
@@ -300,6 +302,24 @@ func TestClassifyByTaxonomy(t *testing.T) {
 	}
 	params.Taxonomy = "iab-qag"
 	_, err = client.ClassifyByTaxonomy(params)
+	if err != nil {
+		t.Error(err)
+	}
+}
+
+func TestAspectBasedSentiment(t *testing.T) {
+	params := &AspectBasedSentimentParams{}
+	_, err := client.AspectBasedSentiment(params)
+	if err == nil {
+		t.Error("did not return error")
+	}
+	params.Text = "Delicious food. Disappointing service."
+	_, err = client.AspectBasedSentiment(params)
+	if err == nil {
+		t.Error("did not return error")
+	}
+	params.Domain = "cars"
+	_, err = client.AspectBasedSentiment(params)
 	if err != nil {
 		t.Error(err)
 	}
