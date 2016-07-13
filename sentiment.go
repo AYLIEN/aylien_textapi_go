@@ -27,6 +27,9 @@ type SentimentParams struct {
 	Text string
 	URL  string
 
+	// Default is en.
+	Language string
+
 	// The analyze mode.
 	// Valid option are tweet suitable for short text (default).
 	// And document which is more suitable for longer bodies of text.
@@ -89,6 +92,10 @@ func (c *Client) Sentiment(params *SentimentParams) (*SentimentResponse, error) 
 
 	if len(params.Mode) > 0 {
 		body.Add("mode", params.Mode)
+	}
+
+	if len(params.Language) > 0 {
+		body.Add("language", params.Language)
 	}
 
 	sentiment := &SentimentResponse{}
