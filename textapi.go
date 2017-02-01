@@ -29,7 +29,7 @@ import (
 )
 
 // version is SDK's version.
-const version = "0.5.1"
+const version = "0.5.2"
 
 // An Auth is an authentication token that will be used to
 // authenticate client.
