@@ -55,7 +55,7 @@ type ExtractResponse struct {
 	PublishDate DateTime `json:"publishDate"`
 	Videos      []string `json:"videos"`
 	Feeds       []string `json:"feeds"`
-	Keywords    []string `json:"keywords"`
+	Tags        []string `json:"tags"`
 }
 
 // Extract extracts information from the web page defined by the given params information.
