@@ -54,6 +54,8 @@ type Client struct {
 	apiHostAndPath string
 
 	RateLimits *RateLimits
+
+	Client *http.Client
 }
 
 // An Error is the JSON response whenever an error occurs.
@@ -125,6 +127,10 @@ func (c *Client) newRequest(path string, form *url.Values) (*http.Request, error
 
 func (c *Client) do(req *http.Request, v interface{}) error {
 	client := &http.Client{}
+	if c.Client != nil {
+		client = c.Client
+	}
+
 	res, err := client.Do(req)
 
 	if err != nil {
