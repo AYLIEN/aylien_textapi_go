@@ -4,6 +4,7 @@ package textapi
 
 import (
 	"context"
+	"time"
 
 	"google.golang.org/appengine/urlfetch"
 )
@@ -14,6 +15,7 @@ func NewClientInContext(auth Auth, useHTTPS bool, ctx context.Context) (*Client,
 	if err != nil {
 		return nil, err
 	}
-	client.Client = urlfetch.Client(ctx)
+	ctxTO, _ := context.WithTimeout(ctx, 60*time.Second)
+	client.Client = urlfetch.Client(ctxTO)
 	return client, nil
 }
