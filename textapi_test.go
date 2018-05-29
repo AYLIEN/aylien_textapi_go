@@ -61,6 +61,8 @@ func init() {
 				} else {
 					bytes, _ = json.Marshal(EntitiesResponse{})
 				}
+			case "/elsa":
+				bytes, _ = json.Marshal(ElsaResponse{})
 			case "/hashtags":
 				bytes, _ = json.Marshal(HashtagsResponse{})
 			case "/sentiment":
@@ -184,6 +186,19 @@ func TestEntities(t *testing.T) {
 	}
 	params.Text = "Valid text"
 	_, err = client.Entities(params)
+	if err != nil {
+		t.Error(err)
+	}
+}
+
+func TestElsa(t *testing.T) {
+	params := &ElsaParams{}
+	_, err := client.Elsa(params)
+	if err == nil {
+		t.Error("did not return error")
+	}
+	params.Text = "Valid text"
+	_, err = client.Elsa(params)
 	if err != nil {
 		t.Error(err)
 	}
