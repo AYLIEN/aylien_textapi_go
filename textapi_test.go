@@ -51,8 +51,6 @@ func init() {
 				bytes, _ = json.Marshal(ConceptsResponse{})
 			case "/classify":
 				bytes, _ = json.Marshal(ClassifyResponse{})
-			case "/classify/unsupervised":
-				bytes, _ = json.Marshal(UnsupervisedClassifyResponse{})
 			case "/classify/iab-qag":
 				bytes, _ = json.Marshal(ClassifyByTaxonomyResponse{})
 			case "/entities":
@@ -72,8 +70,6 @@ func init() {
 				w.Header().Add("X-RateLimit-Reset", "1420479141")
 				w.Header().Add("X-RateLimit-Remaining", "999")
 				bytes, _ = json.Marshal(LanguageResponse{})
-			case "/related":
-				bytes, _ = json.Marshal(RelatedResponse{})
 			case "/summarize":
 				url := r.FormValue("url")
 				if url == "invalid" {
@@ -82,8 +78,6 @@ func init() {
 				} else {
 					bytes, _ = json.Marshal(SummarizeResponse{})
 				}
-			case "/microformats":
-				bytes, _ = json.Marshal(MicroformatsResponse{})
 			case "/image-tags":
 				bytes, _ = json.Marshal(ImageTagsResponse{})
 			case "/absa/cars":
@@ -208,19 +202,6 @@ func TestHashtags(t *testing.T) {
 	}
 }
 
-func TestRelated(t *testing.T) {
-	params := &RelatedParams{}
-	_, err := client.Related(params)
-	if err == nil {
-		t.Error("did not return error")
-	}
-	params.Phrase = "android"
-	_, err = client.Related(params)
-	if err != nil {
-		t.Error(err)
-	}
-}
-
 func TestSummarize(t *testing.T) {
 	params := &SummarizeParams{}
 	_, err := client.Summarize(params)
@@ -240,37 +221,6 @@ func TestSummarize(t *testing.T) {
 	}
 	params.Text = "text"
 	_, err = client.Summarize(params)
-	if err != nil {
-		t.Error(err)
-	}
-}
-
-func TestUnsupervisedClassification(t *testing.T) {
-	params := &UnsupervisedClassifyParams{}
-	_, err := client.UnsupervisedClassify(params)
-	if err == nil {
-		t.Error("did not return error")
-	}
-	params.Text = "Samsung Galaxy S II"
-	_, err = client.UnsupervisedClassify(params)
-	if err == nil {
-		t.Error("did not return error")
-	}
-	params.Classes = []string{"android", "ios"}
-	_, err = client.UnsupervisedClassify(params)
-	if err != nil {
-		t.Error(err)
-	}
-}
-
-func TestMicroformats(t *testing.T) {
-	params := &MicroformatsParams{}
-	_, err := client.Microformats(params)
-	if err == nil {
-		t.Error("did not return error")
-	}
-	params.URL = "http://aylien.com/"
-	_, err = client.Microformats(params)
 	if err != nil {
 		t.Error(err)
 	}
