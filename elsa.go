@@ -36,10 +36,41 @@ type ElsaParams struct {
 	Text string
 }
 
-// An ElsaResponse is the JSON description of entities extraction response.
+// Sentiment is the JSON description of sentiment values in the response
+type Sentiment struct {
+	Polarity   string  `json:"polarity"`
+	Confidence float64 `json:"confidence"`
+}
+
+// Mention is the JSON description of an entity mention in the response.
+type Mention struct {
+	Offset     int        `json:"offset"`
+	Confidence float64    `json:"confidence"`
+	Text       string     `json:"text"`
+	Sentiment  Sentiment  `json:sentiment`
+
+}
+
+// Link is the JSON description of a Link entity in the response.
+type Link struct {
+	URI        string   `json:"uri"`
+	Provider   string   `json:"provider"`
+	Types      []string `json:"types"`
+	Confidence float64  `json:"confidence"`
+}
+
+// Entity is the JSON description of an entity in response.
+type Entity struct {
+	Mentions	     []Mention   `json:"mentions"`
+	OverallSentiment Sentiment   `json:"overall_sentiment"`
+	Type             string      `json:"type"`
+	Links            []Link      `json:"links"`
+}
+
+// ElsaResponse is the JSON description of the elsa response.
 type ElsaResponse struct {
-	Text     string                 `json:"text"`
-	Entities []map[string]interface{} `json:"entities"`
+	Text     string        `json:"text"`
+	Entities []Entity      `json:"entities"`
 }
 
 // Elsa extracts entities mentioned in the document defined by the given params information.
