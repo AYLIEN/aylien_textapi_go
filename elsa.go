@@ -21,6 +21,14 @@ import (
 	"net/url"
 )
 
+/*
+ELSA stands for Entity Level Sentiment Analysis,
+This endpoint analyzes sentiment towards entities found in text.
+Extracts mentions of named entities (Person, Organization, Location), 
+associates a type and links them to DBPedia (where possible), and evaluates sentiment towards each of the entities.
+This endpoint includes some of the functionality of the entities and concepts endpoints.
+*/
+
 // ElsaParams is the set of parameters that defines a document whose entities needs to be extracted.
 type ElsaParams struct {
 	// Either URL or Text is required.
