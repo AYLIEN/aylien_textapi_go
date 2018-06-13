@@ -19,7 +19,6 @@ package textapi
 import (
 	"errors"
 	"net/url"
-	"strconv"
 )
 
 // ClassifyParams is the set of parameters that defines a document whose classification needs to be calculated.
@@ -46,31 +45,6 @@ type ClassifyResponse struct {
 	Text       string     `json:"text"`
 	Language   string     `json:"language"`
 	Categories []Category `json:"categories"`
-}
-
-// UnsupervisedClassifyParams is the set of parameters that defines a document whose needs to be classified.
-type UnsupervisedClassifyParams struct {
-	// Either URL or Text is required.
-	URL  string
-	Text string
-
-	// List of classes to classify into
-	Classes []string
-
-	// Number of concepts used to measure the semantic similarity between two words.
-	NumberOfConcepts int
-}
-
-// An UnsupervisedClassifyClass is the JSON description of a class.
-type UnsupervisedClassifyClass struct {
-	Label string  `json:"label"`
-	Score float32 `json:"score"`
-}
-
-// An UnsupervisedClassifyResponse is the JSON description of unsupervised classification response.
-type UnsupervisedClassifyResponse struct {
-	Text    string                      `json:"text"`
-	Classes []UnsupervisedClassifyClass `json:"classes"`
 }
 
 // A ClassifyByTaxonomyParams is the set of parameters that defines a document whose needs to be classified according to a taxonomy.
@@ -127,38 +101,6 @@ func (c *Client) Classify(params *ClassifyParams) (*ClassifyResponse, error) {
 	}
 
 	return classification, err
-}
-
-// UnsupervisedClassify picks the most semantically relevant class label or tag for the document defined by the given params information.
-func (c *Client) UnsupervisedClassify(params *UnsupervisedClassifyParams) (*UnsupervisedClassifyResponse, error) {
-	body := &url.Values{}
-
-	if len(params.Text) > 0 {
-		body.Add("text", params.Text)
-	} else if len(params.URL) > 0 {
-		body.Add("url", params.URL)
-	} else {
-		return nil, errors.New("you must either provide url or text")
-	}
-
-	if params.NumberOfConcepts > 0 {
-		body.Add("number_of_concepts", strconv.Itoa(params.NumberOfConcepts))
-	}
-
-	if len(params.Classes) < 2 {
-		return nil, errors.New("you must provide at least two classes")
-	}
-	for _, c := range params.Classes {
-		body.Add("class", c)
-	}
-
-	classes := &UnsupervisedClassifyResponse{}
-	err := c.call("/classify/unsupervised", body, classes)
-	if err != nil {
-		return nil, err
-	}
-
-	return classes, err
 }
 
 // ClassifyByTaxonomy classifies the document defined by the given params information according to the specified taxonomy.
